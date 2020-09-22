@@ -4,14 +4,13 @@ import CustomPagerAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
-import com.example.learnenglish504.App
-import com.example.learnenglish504.App.Companion.vocabularyDao
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Vocabulary
 import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WordID
+import com.example.learnenglish504.database.MyDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_word.*
 import kotlinx.android.synthetic.main.word_details_top.*
@@ -23,6 +22,10 @@ class WordActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word)
+
+        val compositeDisposable = CompositeDisposable()
+        var databaseInstance = MyDatabase.getDatabaseInstance(this)
+        val vocabularyDao = databaseInstance!!.vocabularyDao()
 
         word_fab_return.setOnClickListener { finish() }
 
@@ -69,7 +72,7 @@ class WordActivity : AppCompatActivity() {
             }, {
 
             }).let {
-                App.compositeDisposable.add(it)
+                compositeDisposable.add(it)
             }
 
         onNextPrevClicks()

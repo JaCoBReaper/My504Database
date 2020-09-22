@@ -3,20 +3,18 @@ package com.example.learnenglish504.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.learnenglish504.App
-import com.example.learnenglish504.App.Companion.lessonWords
-import com.example.learnenglish504.App.Companion.lessons
-import com.example.learnenglish504.App.Companion.storyDao
-import com.example.learnenglish504.App.Companion.vocabularies
-import com.example.learnenglish504.App.Companion.vocabularyDao
+import com.example.learnenglish504.IStoryDao
 import com.example.learnenglish504.R
+import com.example.learnenglish504.Story
+import com.example.learnenglish504.Vocabulary
 import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_LessonNumber
 import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WordID
 import com.example.learnenglish504.adapter.IOnWordClickListener
 import com.example.learnenglish504.adapter.LessonAdapter
+import com.example.learnenglish504.database.MyDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_lesson.*
 
@@ -25,6 +23,13 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
+
+        val compositeDisposable = CompositeDisposable()
+        lateinit var lessonWords: List<Vocabulary>
+        lateinit var lessons: List<Story>
+        var databaseInstance = MyDatabase.getDatabaseInstance(this)
+        val storyDao = databaseInstance!!.storyDao()
+        val vocabularyDao = databaseInstance!!.vocabularyDao()
 
         // coming from homeAdapter
         val lessonNumber = intent.getIntExtra(INTENT_VALUE_LessonNumber, 0)
@@ -44,7 +49,7 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
             }, {
 
             }).let {
-                App.compositeDisposable.add(it)
+                compositeDisposable.add(it)
             }
 
         storyDao.getAllLessons()
@@ -60,7 +65,7 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
             }, {
 
             }).let {
-                App.compositeDisposable.add(it)
+                compositeDisposable.add(it)
             }
     }
 
