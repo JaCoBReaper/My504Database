@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    /////// main colors
+    <color name="myColor_white">#FFFFFF</color>
+    <color name="myColor_black">#000000</color>
+    <color name="myColor_red">#FF0000</color>
+    <color name="myColor_blue">#0000FF</color>
+    <color name="myColor_green">#00FF00</color>
+    <color name="myColor_orange">#FF8400</color>
+    <color name="myColor_pink">#FF00FF</color>
+    <color name="myColor_yellow">#FFFF00</color>
+    <color name="myColor_brown">#2B0206</color>
+    <color name="myColor_purple">#8900FF</color>
+
+    /////// light colors
+    <color name="myColor_gray">#BAB8B8</color>
+    <color name="myColor_green_light">#4BA863</color>
+    <color name="myColor_blue_light">#4B7DA8</color>
+
+
+    /////// dark colors
+    <color name="myColor_red_dark">#7A0909</color>
+    <color name="myColor_blue_dark">#05008F</color>
+    <color name="myColor_green_dark">#007C20</color>
+    <color name="myColor_pink_dark">#980166</color>
+
+    /////// mild colors
+    <color name="myColor_yellow_mild">#E6CB44</color>
+
+    <color name="myColor_green_mild">#008000</color>
+
+    // gray colors
+    <color name="gray0">#77A8B6B6</color>
+    <color name="gray1">#777CAFAF</color>
+    <color name="gray2">#99475167</color>
+    <color name="gray3">#496480</color>
+
+
+</resources>

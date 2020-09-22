@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LearnEnglish504</string>
+
+    // my strings
+    <string name="per_continue_learning">ادامه یادگیری</string>
+    <string name="per_progression_text">شما 20% مسیر را پیموده اید!</string>
+
+    // content description = cd
+    <string name="cd_progression_image">user progression image</string>
+    <string name="per_lesson_title">لیست درس ها</string>
+
+</resources>

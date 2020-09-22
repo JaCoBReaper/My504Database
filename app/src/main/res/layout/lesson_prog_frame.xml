@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/prog_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/shape_progression_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/progression_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/cd_progression_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/progression_lesson" />
+
+    <TextView
+        android:id="@+id/prog_lesson_txv_total"
+        style="@style/TextStyle.Normal"
+        android:layout_marginTop="8dp"
+        android:text="12 /     کلمه"
+        android:textSize="@dimen/font_normal3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/prog_frameLayout">
+
+    </TextView>
+
+
+    <TextView
+        android:id="@+id/prog_lesson_txv_learned"
+        style="@style/TextStyle.Normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="@dimen/font_normal3"
+        app:layout_constraintBottom_toTopOf="@id/prog_lesson_txv_total"
+        app:layout_constraintEnd_toEndOf="@+id/prog_lesson_txv_total"
+        app:layout_constraintHorizontal_bias=".6"
+        app:layout_constraintStart_toStartOf="@+id/prog_lesson_txv_total"
+        app:layout_constraintTop_toBottomOf="@id/prog_lesson_txv_total" />
+
+    <ProgressBar
+        android:id="@+id/prog_progbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="250dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="16dp"
+        android:max="504"
+        android:progress="100"
+        android:progressDrawable="@drawable/shape_progression_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prog_lesson_txv_total" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

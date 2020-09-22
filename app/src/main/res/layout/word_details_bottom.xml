@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/viewPager_txv_eng"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:textSize="@dimen/font_normal2"
+        tools:text="1. this is a test , act as test, for test, maybe 2 line, not yet? again?! really?! come on! this is a test" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="250dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/gray1" />
+
+    <TextView
+        android:id="@+id/viewPager_txv_per"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:textSize="@dimen/font_normal2"
+        tools:text="1. این ترجمه ی همان متن بالا نیست، ممکن است شما فکر کنید این چرا با اون فرق میکنه ولی خب میکنه که میکنه به من چه اصلا" />
+
+</LinearLayout>
