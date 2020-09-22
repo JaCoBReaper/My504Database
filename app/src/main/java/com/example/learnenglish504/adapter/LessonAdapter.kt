@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnenglish504.R
+import com.example.learnenglish504.Story
 import com.example.learnenglish504.Vocabulary
 
 class LessonAdapter(
     private val data: List<Vocabulary>,
+//    private val lessonData: List<Story>,
     private val mClickListener: IOnWordClickListener
 ) :
     RecyclerView.Adapter<LessonAdapter.MyViewHolder>() {

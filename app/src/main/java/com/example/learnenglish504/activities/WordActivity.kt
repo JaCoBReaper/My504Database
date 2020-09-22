@@ -4,11 +4,15 @@ import CustomPagerAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
+import com.example.learnenglish504.App
 import com.example.learnenglish504.App.Companion.vocabularyDao
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Vocabulary
 import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WordID
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_word.*
 import kotlinx.android.synthetic.main.word_details_top.*
 
@@ -27,40 +31,46 @@ class WordActivity : AppCompatActivity() {
 
         lateinit var word: Vocabulary
 
+        /* word_fab_favourite.setOnClickListener {
 
-        word_fab_favourite.setOnClickListener {
+             if (word.favorited == 1)
+                 vocabularyDao.setFavourite(0, wordID)
+             else {
+                 vocabularyDao.setFavourite(1, wordID)
+             }
+         }*/
 
-            if (word.favorited == 1)
-                vocabularyDao.setFavourite(0, wordID)
-            else {
-                vocabularyDao.setFavourite(1, wordID)
+        vocabularyDao.getWordDetailsByID(wordID)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+                word = it
+
+                word_txv_actual_word.text = word.word
+                word_txv_pronounce.text = word.pronunciation
+                word_txv_translate.text = word.persian
+                word_txv_defenition.text = word.definition
+
+                val examplesPer = ArrayList<String>()
+
+                examplesPer.add(word.pexa.toString())
+                examplesPer.add(word.pexb.toString())
+                examplesPer.add(word.pexc.toString())
+
+                val examplesEng = word.examples?.split("\n") as ArrayList
+
+                val pagerAdapter = CustomPagerAdapter(this, examplesPer, examplesEng)
+                word_viewPager.adapter = pagerAdapter
+
+                // for showing the middle one first
+                word_viewPager.currentItem = 1
+
+            }, {
+
+            }).let {
+                App.compositeDisposable.add(it)
             }
-        }
-
-        Thread {
-
-            word = vocabularyDao.getWordDetailsByID(wordID)
-
-            word_txv_actual_word.text = word.word
-            word_txv_pronounce.text = word.pronunciation
-            word_txv_translate.text = word.persian
-            word_txv_defenition.text = word.definition
-
-            val examplesPer = ArrayList<String>()
-
-            examplesPer.add(word.pexa.toString())
-            examplesPer.add(word.pexb.toString())
-            examplesPer.add(word.pexc.toString())
-
-            val examplesEng = word.examples?.split("\n") as ArrayList
-
-            val pagerAdapter = CustomPagerAdapter(this, examplesPer, examplesEng)
-            word_viewPager.adapter = pagerAdapter
-
-            // for showing the middle one first
-            word_viewPager.currentItem = 1
-
-        }.start()
 
         onNextPrevClicks()
 
@@ -83,7 +93,6 @@ class WordActivity : AppCompatActivity() {
                 } else {
                     word_detail_imgb_next.visibility = View.INVISIBLE;
                 }
-
             }
 
             override fun onPageSelected(position: Int) {}

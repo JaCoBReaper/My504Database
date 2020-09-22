@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Story
 
-class HomeAdapter(private val data: List<Story>, private val mClickListener: IOnLessonClickListener) :
+class HomeAdapter(
+    private val data: List<Story>,
+    private val mClickListener: IOnLessonClickListener
+) :
     RecyclerView.Adapter<HomeAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -44,12 +47,11 @@ class HomeAdapter(private val data: List<Story>, private val mClickListener: IOn
 
         holder.itemView.setOnClickListener {
 
-            mClickListener.onItemClick(position, holder.itemView)
+            mClickListener.onItemClick((data[position].id!!))
         }
     }
 
     interface IOnLessonClickListener {
-
-        fun onItemClick(position: Int, view: View)
+        fun onItemClick(position: Int)
     }
 }
