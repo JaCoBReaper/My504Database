@@ -19,7 +19,7 @@ data class Vocabulary(
     val lesson_order: Int?,
     val definition: String?,
     val persian: String?,
-    val favorited: Int?,
+    var favorited: Int?,
     val viewed: Int?,
     val is_read: Int?,
     val pexa: String?,

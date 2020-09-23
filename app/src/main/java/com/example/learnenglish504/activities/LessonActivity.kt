@@ -3,6 +3,7 @@ package com.example.learnenglish504.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnenglish504.IStoryDao
 import com.example.learnenglish504.R
@@ -17,23 +18,27 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_lesson.*
+import kotlinx.android.synthetic.main.word_details_bottom.*
 
 class LessonActivity : AppCompatActivity(), IOnWordClickListener {
+
+    var myAdapter: LessonAdapter? = null
+    val requestCodeToWordActivity = 123
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
 
+
         val compositeDisposable = CompositeDisposable()
         lateinit var lessonWords: List<Vocabulary>
         lateinit var lessons: List<Story>
-        var databaseInstance = MyDatabase.getDatabaseInstance(this)
+        val databaseInstance = MyDatabase.getDatabaseInstance(this)
         val storyDao = databaseInstance!!.storyDao()
-        val vocabularyDao = databaseInstance!!.vocabularyDao()
+        val vocabularyDao = databaseInstance.vocabularyDao()
 
         // coming from homeAdapter
         val lessonNumber = intent.getIntExtra(INTENT_VALUE_LessonNumber, 0)
-
 
         vocabularyDao.getWordsByLesson(lessonNumber)
             .subscribeOn(Schedulers.io())
@@ -43,9 +48,9 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
                 lessonWords = it
 
                 lesson_recycler.layoutManager = LinearLayoutManager(this)
-                val myAdapter = LessonAdapter(lessonWords, this)
+                myAdapter = LessonAdapter(this, lessonWords, this)
                 lesson_recycler.adapter = myAdapter
-
+                myAdapter!!.notifyDataSetChanged()
             }, {
 
             }).let {
@@ -73,6 +78,17 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
 
         val intent = Intent(this, WordActivity::class.java)
         intent.putExtra(INTENT_VALUE_WordID, position)
-        startActivity(intent)
+        startActivityForResult(intent, requestCodeToWordActivity)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == requestCodeToWordActivity && resultCode == RESULT_OK && data != null) {
+            val wordID = data.getIntExtra("ChangedFavID", 0)
+            val action = data.getStringExtra("Action")
+
+            myAdapter?.updateFav(wordID)
+        }
     }
 }
