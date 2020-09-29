@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnenglish504.R
@@ -25,7 +26,7 @@ class LessonAdapter(
     private val databaseInstance = MyDatabase.getDatabaseInstance(context)
     private val vocabularyDao = databaseInstance!!.vocabularyDao()
 
-    lateinit var holder2: MyViewHolder
+    private lateinit var mHolder: MyViewHolder
 
     var favFlag = 0
 
@@ -34,6 +35,9 @@ class LessonAdapter(
         val txtEng: TextView = itemView.findViewById(R.id.lesson_txv_eng_word)
         val txtPer: TextView = itemView.findViewById(R.id.lesson_per_translate)
         val imgFav: ImageView = itemView.findViewById(R.id.lesson_img_favourite)
+
+//        val txtLearned: TextView = itemView.findViewById(R.id.prog_lesson_txv_learned)
+//        val progressBar: ProgressBar = itemView.findViewById(R.id.prog_lesson_progbar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -42,8 +46,8 @@ class LessonAdapter(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.lesson_row, parent, false)
 
-        holder2 = MyViewHolder(view)
-        return holder2
+        mHolder = MyViewHolder(view)
+        return mHolder
     }
 
     override fun getItemCount(): Int = data.size
@@ -82,9 +86,7 @@ class LessonAdapter(
                     favFlag = 0
                     holder.imgFav.setImageResource(R.drawable.ic_not_favorite)
                 }
-            }, {
-
-            }).let { compositeDisposable.add(it) }
+            }, {}).let { compositeDisposable.add(it) }
     }
 
     fun updateFav(wordID: Int) {
@@ -92,31 +94,17 @@ class LessonAdapter(
         vocabularyDao.getWordDetailsByID(wordID)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ actualWord ->
+            .subscribe({ wordDao ->
 
-                vocabularyDao.checkFavourite(actualWord.word!!)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ isFav ->
-                        if (isFav == 1) {
+                if (wordDao.favorited == 1) {
 
-                            holder2.imgFav.setImageResource(R.drawable.ic_is_favorite)
+                    mHolder.imgFav.setImageResource(R.drawable.ic_is_favorite)
 
-                        } else {
-                            favFlag = 0
-                            holder2.imgFav.setImageResource(R.drawable.ic_not_favorite)
-                        }
-                    }, {
-
-                    }).let { compositeDisposable.add(it) }
-
-
-//                if (it.word == )
-//                    holder2.imgFav.setImageResource(R.drawable.ic_is_favorite)
-//                else
-//                    holder2.imgFav.setImageResource(R.drawable.ic_not_favorite)
-
-            },{}).let { compositeDisposable.add(it) }
+                } else {
+                    favFlag = 0
+                    mHolder.imgFav.setImageResource(R.drawable.ic_not_favorite)
+                }
+            }, {}).let { compositeDisposable.add(it) }
 
         notifyDataSetChanged()
     }

@@ -10,7 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.WordActivity"></activity>
+        <activity android:name=".activities.LearningActivity"></activity>
+        <activity android:name=".activities.LearningHomeActivity" />
+        <activity android:name=".activities.RefreshActivity" />
+        <activity android:name=".activities.FavouriteActivity" />
+        <activity android:name=".activities.WordActivity" />
         <activity android:name=".activities.LessonActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.MainActivity">

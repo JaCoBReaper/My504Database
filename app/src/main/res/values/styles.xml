@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,14 +16,26 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/font_normal1</item>
         <item name="android:textColor">@color/myColor_white</item>
-
     </style>
 
     <style name="Button.Normal" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/font_normal1</item>
         <item name="android:textColor">@color/myColor_white</item>
         <item name="android:textStyle">bold</item>
+    </style>
 
+    <style name="Button.FloatingAction" parent="android:Widget.Button">
+        <item name="android:textSize">@dimen/font_normal1</item>
+        <item name="android:textColor">@color/myColor_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/shape_progression_button</item>
+        <item name="backgroundTint">@color/myColor_orange</item>
+    </style>
+
+    <style name="Button.FloatingAction.Play" parent="android:Widget.Material.Button">
+
+        <item name="android:tint">@color/myColor_green_mild</item>
+<!--        <item name="android:backgroundTint">@color/myColor_green_mild</item>-->
 
     </style>
 

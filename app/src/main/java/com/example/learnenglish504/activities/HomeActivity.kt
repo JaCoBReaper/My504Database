@@ -4,15 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.learnenglish504.App
 import com.example.learnenglish504.R
-import com.example.learnenglish504.Story
-import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_LessonNumber
 import com.example.learnenglish504.adapter.HomeAdapter
-import com.example.learnenglish504.database.MyDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.home_prog_frame.*
 
 class HomeActivity : AppCompatActivity(), HomeAdapter.IOnLessonClickListener {
 
@@ -20,33 +18,67 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.IOnLessonClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val compositeDisposable = CompositeDisposable()
-        lateinit var lessons: List<Story>
-        var databaseInstance = MyDatabase.getDatabaseInstance(this)
-        val storyDao = databaseInstance!!.storyDao()
+        getAllLessons()
+// fab fav
+        home_fab_fav.setOnClickListener {
+            val intent = Intent(this, FavouriteActivity::class.java)
+            startActivity(intent)
+        }
 
-        storyDao.getAllLessons()
+// check if learning started
+        val startedLearning =
+            App.learnLessonPref.getBoolean(Constants.LEARNING_STARTED, false)
+
+        if (startedLearning) {
+            home_prog_btn_continue.text == Constants.HOME_CONTINUE_LEARNING
+        }
+
+
+// continue learning
+        /*home_prog_btn_continue.setOnClickListener {
+
+            if (home_prog_btn_continue.text == Constants.HOME_START_LEARNING)
+                home_prog_btn_continue.text = Constants.HOME_CONTINUE_LEARNING
+
+            App.learnLessonPrefEditor = App.learnLessonPref.edit()
+
+            App.learnLessonPrefEditor.putBoolean(Constants.LEARNING_STARTED, false)
+            App.learnLessonPrefEditor.apply()
+
+            val intent = Intent(this, LessonActivity::class.java)
+
+            val lessonNumber = App.learnLessonPref.getInt(Constants.LEARNING_LESSON, 1)
+
+
+            intent.putExtra(Constants.INTENT_VALUE_LessonNumber, lessonNumber)
+            startActivityForResult(intent, Constants.REQ_CODET_TO_LearningLesson)
+        }*/
+
+
+    }
+
+    private fun getAllLessons() {
+        App.storyDao.getAllLessons()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 
-                lessons = it
+                App.lessons = it
 
                 recyclerView_home.layoutManager = GridLayoutManager(this, 3)
-                val myAdapter = HomeAdapter(lessons, this)
+                val myAdapter = HomeAdapter(App.lessons, this)
                 recyclerView_home.adapter = myAdapter
             }, {
 
             }).let {
-                compositeDisposable.add(it)
+                App.compositeDisposable.add(it)
             }
     }
 
     override fun onItemClick(lessonNum: Int) {
 
         val intent = Intent(this, LessonActivity::class.java)
-        intent.putExtra(INTENT_VALUE_LessonNumber, lessonNum)
+        intent.putExtra(Constants.INTENT_VALUE_LessonNumber, lessonNum)
         startActivity(intent)
     }
-    // Todo close database
 }

@@ -5,15 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.learnenglish504.App.Companion.compositeDisposable
+import com.example.learnenglish504.App.Companion.vocabularyDao
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Vocabulary
-import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WordID
-import com.example.learnenglish504.database.MyDatabase
+import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WORDID
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_word.*
 import kotlinx.android.synthetic.main.word_details_top.*
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.word_details_top.*
 
 class WordActivity : AppCompatActivity() {
 
-    var isFavChanged = false
+    private var isFavChanged = false
     private var wordID = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,33 +28,26 @@ class WordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word)
 
-        val compositeDisposable = CompositeDisposable()
-        val databaseInstance = MyDatabase.getDatabaseInstance(this)
-        val vocabularyDao = databaseInstance!!.vocabularyDao()
 
-        // coming from LessonAdapter
-        wordID = intent.getIntExtra(INTENT_VALUE_WordID, 0)
-        lateinit var word: Vocabulary
+// coming from LessonAdapter
+        wordID = intent.getIntExtra(INTENT_VALUE_WORDID, 0)
+        lateinit var wordDao: Vocabulary
 
 // getting and setting word
         vocabularyDao.getWordDetailsByID(wordID)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                word = it
-                setWord(word)
+                wordDao = it
+                setWord(wordDao)
 
-                // for showing the middle one first
+                // for showing view pager item, the middle one first
                 word_viewPager.currentItem = 1
 
-            }, {
-
-            }).let {
-                compositeDisposable.add(it)
-            }
+            }, {}).let { compositeDisposable.add(it) }
 
         word_fab_return.setOnClickListener {
-            finish()
+            checkDataChanged()
         }
 
 // fav button behaviour
@@ -63,27 +55,31 @@ class WordActivity : AppCompatActivity() {
 
             isFavChanged = true
 
-            vocabularyDao.checkFavourite(word.word!!)
+            vocabularyDao.checkFavourite(wordDao.word!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe({ result ->
 
-                    if (it == 0) {
+                    if (result == 0) {
 
-                        vocabularyDao.setFavourite(1, word.word!!)
+                        vocabularyDao.setFavourite(1, wordDao.word!!)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
+
                                 word_fab_favourite.setImageResource(R.drawable.ic_is_favorite)
+
                             }, {}).let { compositeDisposable.add(it) }
 
                     } else {
 
-                        vocabularyDao.setFavourite(0, word.word!!)
+                        vocabularyDao.setFavourite(0, wordDao.word!!)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
+
                                 word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
+
                             }, {}).let { compositeDisposable.add(it) }
 
                     }
@@ -91,6 +87,31 @@ class WordActivity : AppCompatActivity() {
 
                 }).let { compositeDisposable.add(it) }
         }
+
+// learn progress
+        /*word_txv_learned.setOnClickListener {
+            if (word_txv_learned.currentTextColor == resources.getColor(R.color.myColor_red_light)) {
+
+                wordLearned = wordPref.getInt(NUM_WORDS_LEARNED, 120) + 1
+                wordPrefEditor.putInt(NUM_WORDS_LEARNED, wordLearned)
+
+                word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
+                Toast.makeText(this, "$wordLearned", Toast.LENGTH_SHORT).show()
+            }
+        }*/
+
+        word_txv_learned.setOnClickListener {
+
+            if (word_txv_learned.currentTextColor == resources.getColor(R.color.myColor_red)) {
+
+                word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
+                vocabularyDao.setLearned(1, wordDao.word!!)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({}, {}).let { compositeDisposable.add(it) }
+            }
+        }
+
 // pager
         onNextPrevClicks()
 
@@ -132,6 +153,11 @@ class WordActivity : AppCompatActivity() {
         else
             word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
 
+        if (word.is_read == 1)
+            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
+        else
+            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_red))
+
 
         val examplesPer = ArrayList<String>()
 
@@ -161,6 +187,10 @@ class WordActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
+        checkDataChanged()
+    }
+
+    private fun checkDataChanged() {
         if (isFavChanged) {
 
             val output = Intent()

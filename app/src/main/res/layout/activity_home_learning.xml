@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray0"
-    tools:context=".activities.WordActivity">
+    tools:context=".activities.LearningHomeActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
@@ -44,15 +44,34 @@
         app:layout_constraintGuide_percent=".95" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/word_fab_return"
+        android:id="@+id/learnWord_fab_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        app:backgroundTint="@color/myColor_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="60dp"
-        app:srcCompat="@drawable/ic_return" />
+        app:maxImageSize="30dp"
+        app:srcCompat="@drawable/ic_play"
+        app:tint="@color/myColor_green_light" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/shape_progression_timer_bg"
+        android:max="10"
+        android:padding="12dp"
+        android:progress="0"
+        android:progressDrawable="@drawable/shape_progression_timer"
+        app:layout_constraintBottom_toBottomOf="@+id/learnWord_fab_play"
+        app:layout_constraintEnd_toStartOf="@+id/word_fab_favourite"
+        app:layout_constraintStart_toEndOf="@+id/learnWord_fab_play"
+        app:layout_constraintTop_toTopOf="@+id/word_fab_favourite" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/word_fab_favourite"
@@ -62,8 +81,9 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="30dp"
-        app:srcCompat="@drawable/ic_not_favorite" />
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_timer"
+        app:tint="@color/myColor_purple" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewTop"
@@ -124,21 +144,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
         app:srcCompat="@drawable/ic_next" />
-
-    <TextView
-        android:id="@+id/word_txv_learned"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_home_lesson_row_bg"
-        android:gravity="center"
-        android:text="یاد گرفتم"
-        android:textColor="@color/myColor_red_light"
-        android:textSize="@dimen/font_normal3"
-        app:layout_constraintBottom_toBottomOf="@+id/word_fab_return"
-        app:layout_constraintEnd_toStartOf="@+id/word_fab_favourite"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toEndOf="@+id/word_fab_return"
-        app:layout_constraintTop_toTopOf="@+id/word_fab_favourite"
-        tools:srcCompat="@drawable/shape_home_lesson_row_bg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

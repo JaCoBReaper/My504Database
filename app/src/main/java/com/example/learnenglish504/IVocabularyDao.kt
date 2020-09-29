@@ -24,6 +24,18 @@ interface IVocabularyDao {
     @Query("Select favorited FROM vocabulary Where word = :word")
     fun checkFavourite(word: String): Single<Int>
 
+    @Query("Select * FROM vocabulary Where favorited = 1")
+    fun findFavourites(): Single<List<Vocabulary>>
+
+    @Query("UPDATE vocabulary SET is_read = :state WHERE word = :word")
+    fun setLearned(state: Int, word: String): Completable
+
+    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 1")
+    fun findLearned(lesson: Int): Single<List<Vocabulary>>
+
+//    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 1")
+//    fun findLearnedCount(lesson: Int): Single<Int>
+
 //    @Query("SELECT * FROM vocabulary WHERE id = 1")
 //    fun <Vocabulary> Maybe()
 

@@ -20,6 +20,7 @@
     <color name="myColor_gray">#BAB8B8</color>
     <color name="myColor_green_light">#4BA863</color>
     <color name="myColor_blue_light">#4B7DA8</color>
+    <color name="myColor_red_light">#CA3D3D</color>
 
 
     /////// dark colors
@@ -30,7 +31,7 @@
 
     /////// mild colors
     <color name="myColor_yellow_mild">#E6CB44</color>
-
+    <color name="myColor_orange_mild">#E39255</color>
     <color name="myColor_green_mild">#008000</color>
 
     // gray colors
