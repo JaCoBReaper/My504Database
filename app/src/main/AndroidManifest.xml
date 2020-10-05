@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LearningActivity"></activity>
+        <activity android:name=".activities.LearningTestActivity" />
+        <activity android:name=".activities.LearningActivity" />
         <activity android:name=".activities.LearningHomeActivity" />
         <activity android:name=".activities.RefreshActivity" />
         <activity android:name=".activities.FavouriteActivity" />

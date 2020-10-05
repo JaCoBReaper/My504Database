@@ -8,5 +8,8 @@ class LearningHomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_learning)
+
+
+        val wordID = intent.getIntExtra(Constants.INTENT_VALUE_LESSON, 1)
     }
 }

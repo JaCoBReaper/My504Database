@@ -1,11 +1,12 @@
 package com.example.learnenglish504
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "vocabulary")
-data class Vocabulary(
+data class  Vocabulary constructor(
 
     @PrimaryKey
     val id: Int?,
@@ -25,4 +26,7 @@ data class Vocabulary(
     val pexa: String?,
     val pexb: String?,
     val pexc: String?
-)
+){
+    @Transient
+    var status: Int? = 0
+}

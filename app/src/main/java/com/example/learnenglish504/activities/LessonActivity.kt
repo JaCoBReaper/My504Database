@@ -8,14 +8,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnenglish504.App
 import com.example.learnenglish504.App.Companion.compositeDisposable
-import com.example.learnenglish504.App.Companion.learnLessonPrefEditor
 import com.example.learnenglish504.App.Companion.lessonWords
 import com.example.learnenglish504.App.Companion.lessons
 import com.example.learnenglish504.App.Companion.storyDao
 import com.example.learnenglish504.App.Companion.vocabularyDao
 import com.example.learnenglish504.R
-import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_LessonNumber
-import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WORD
+import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_LESSON_NUMBER
+import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WORD_TO_LEARN
 import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WORDID
 import com.example.learnenglish504.activities.Constants.Companion.REQ_CODET_TO_WORDACTIVITY
 import com.example.learnenglish504.adapter.IOnWordClickListener
@@ -24,12 +23,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.lesson_prog_frame.*
-import kotlinx.android.synthetic.main.word_details_top.*
+
 
 class LessonActivity : AppCompatActivity(), IOnWordClickListener {
 
     var myAdapter: LessonAdapter? = null
     private var lessonNumber = 0
+    private var firstWordToBeLearned = "Abandon"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,24 +37,37 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
         setContentView(R.layout.activity_lesson)
 
 // coming from homeAdapter
-        lessonNumber = intent.getIntExtra(INTENT_VALUE_LessonNumber, 0)
+        lessonNumber = intent.getIntExtra(INTENT_VALUE_LESSON_NUMBER, 1)
 
         getLessonWords()
         getLessons()
 // setting progress value
-        updateProgression()
+//        updateProgression()
 // coming from home, learning progress button
-        /*lesson_btn_continue.setOnClickListener {
+        lesson_btn_continue.setOnClickListener {
 
-            learnLessonPrefEditor.putInt(Constants.PREF_LEARNING_LESSON, lessonNumber)
-                .apply()
-
+            with(App.learnLessonPref.edit()) {
+                putInt(Constants.PREF_LEARNING_LESSON_Number, lessonNumber)
+                commit()
+            }
             val intent = Intent(this, LearningActivity::class.java)
-            intent.putExtra(INTENT_VALUE_WORD, lessonNumber)
-            startActivityForResult(intent, REQ_CODET_TO_WORDACTIVITY)
-        }*/
 
+            vocabularyDao.findRemainingWordsByLesson(lessonNumber)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ remainingWords ->
 
+                    if (remainingWords.isNotEmpty())
+                        firstWordToBeLearned = remainingWords[0].word!!
+
+                    intent.putExtra(INTENT_VALUE_WORD_TO_LEARN, firstWordToBeLearned)
+                    intent.putExtra(INTENT_VALUE_LESSON_NUMBER, lessonNumber)
+
+                    startActivityForResult(intent, REQ_CODET_TO_WORDACTIVITY)
+                }, {}).let { compositeDisposable.add(it) }
+
+            // TODO decrease the size when word read
+        }
     }
 
     private fun getLessons() {
@@ -92,7 +105,7 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
     }
 
     private fun updateProgression() {
-        vocabularyDao.findLearned(lessonNumber)
+        vocabularyDao.findRemainingWordsByLesson(lessonNumber)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -123,7 +136,7 @@ class LessonActivity : AppCompatActivity(), IOnWordClickListener {
     }
 
     override fun onResume() {
-        updateProgression()
+//        updateProgression()
         super.onResume()
     }
 

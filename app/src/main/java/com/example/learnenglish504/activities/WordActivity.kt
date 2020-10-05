@@ -88,30 +88,6 @@ class WordActivity : AppCompatActivity() {
                 }).let { compositeDisposable.add(it) }
         }
 
-// learn progress
-        /*word_txv_learned.setOnClickListener {
-            if (word_txv_learned.currentTextColor == resources.getColor(R.color.myColor_red_light)) {
-
-                wordLearned = wordPref.getInt(NUM_WORDS_LEARNED, 120) + 1
-                wordPrefEditor.putInt(NUM_WORDS_LEARNED, wordLearned)
-
-                word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
-                Toast.makeText(this, "$wordLearned", Toast.LENGTH_SHORT).show()
-            }
-        }*/
-
-        word_txv_learned.setOnClickListener {
-
-            if (word_txv_learned.currentTextColor == resources.getColor(R.color.myColor_red)) {
-
-                word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
-                vocabularyDao.setLearned(1, wordDao.word!!)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({}, {}).let { compositeDisposable.add(it) }
-            }
-        }
-
 // pager
         onNextPrevClicks()
 
@@ -140,37 +116,6 @@ class WordActivity : AppCompatActivity() {
                 override fun onPageSelected(position: Int) {}
             })
     }
-
-    private fun setWord(word: Vocabulary) {
-
-        word_txv_actual_word.text = word.word
-        word_txv_pronounce.text = word.pronunciation
-        word_txv_translate.text = word.persian
-        word_txv_defenition.text = word.definition
-
-        if (word.favorited == 1)
-            word_fab_favourite.setImageResource(R.drawable.ic_is_favorite)
-        else
-            word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
-
-        if (word.is_read == 1)
-            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
-        else
-            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_red))
-
-
-        val examplesPer = ArrayList<String>()
-
-        examplesPer.add(word.pexa.toString())
-        examplesPer.add(word.pexb.toString())
-        examplesPer.add(word.pexc.toString())
-
-        val examplesEng = word.examples?.split("\n") as ArrayList
-
-        val pagerAdapter = CustomPagerAdapter(this, examplesPer, examplesEng)
-        word_viewPager.adapter = pagerAdapter
-    }
-
     private fun onNextPrevClicks() {
 
         word_detail_imgb_next.setOnClickListener { word_viewPager.setCurrentItem(getItem(1), true) }
@@ -181,6 +126,36 @@ class WordActivity : AppCompatActivity() {
                 true
             )
         }
+    }
+
+    private fun setWord(wordDao: Vocabulary) {
+
+        word_txv_actual_word.text = wordDao.word
+        word_txv_pronounce.text = wordDao.pronunciation
+        word_txv_translate.text = wordDao.persian
+        word_txv_defenition.text = wordDao.definition
+
+        if (wordDao.favorited == 1)
+            word_fab_favourite.setImageResource(R.drawable.ic_is_favorite)
+        else
+            word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
+
+        if (wordDao.is_read == 1)
+            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
+        else
+            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_red))
+
+
+        val examplesPer = ArrayList<String>()
+
+        examplesPer.add(wordDao.pexa.toString())
+        examplesPer.add(wordDao.pexb.toString())
+        examplesPer.add(wordDao.pexc.toString())
+
+        val examplesEng = wordDao.examples?.split("\n") as ArrayList
+
+        val pagerAdapter = CustomPagerAdapter(this, examplesPer, examplesEng)
+        word_viewPager.adapter = pagerAdapter
     }
 
     private fun getItem(i: Int): Int = word_viewPager.currentItem + i

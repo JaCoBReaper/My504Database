@@ -12,11 +12,17 @@ interface IVocabularyDao {
     @Query("SELECT * FROM vocabulary")
     fun getAllVocabs(): Single<List<Vocabulary>>
 
-    @Query("SELECT * FROM vocabulary WHERE lesson=:inputLesson")
-    fun getWordsByLesson(inputLesson: Int): Single<List<Vocabulary>>
+    @Query("SELECT * FROM vocabulary WHERE lesson = :lesson")
+    fun getWordsByLesson(lesson: Int): Single<List<Vocabulary>>
+
+    @Query("SELECT id FROM vocabulary WHERE word = :word")
+    fun getIdByWord(word: String): Single<Int>
 
     @Query("SELECT * FROM vocabulary WHERE id = :inputID")
     fun getWordDetailsByID(inputID: Int): Single<Vocabulary>
+
+    @Query("SELECT * FROM vocabulary WHERE word = :word")
+    fun getWordDetailsByWord(word: String): Single<Vocabulary>
 
     @Query("UPDATE vocabulary SET favorited = :state WHERE word = :word")
     fun setFavourite(state: Int, word: String): Completable
@@ -30,14 +36,7 @@ interface IVocabularyDao {
     @Query("UPDATE vocabulary SET is_read = :state WHERE word = :word")
     fun setLearned(state: Int, word: String): Completable
 
-    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 1")
-    fun findLearned(lesson: Int): Single<List<Vocabulary>>
-
-//    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 1")
-//    fun findLearnedCount(lesson: Int): Single<Int>
-
-//    @Query("SELECT * FROM vocabulary WHERE id = 1")
-//    fun <Vocabulary> Maybe()
-
+    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 0")
+    fun findRemainingWordsByLesson(lesson: Int): Single<List<Vocabulary>>
 
 }

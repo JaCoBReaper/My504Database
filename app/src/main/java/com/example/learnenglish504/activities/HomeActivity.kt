@@ -28,33 +28,32 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.IOnLessonClickListener {
 // check if learning started
         val startedLearning =
             App.learnLessonPref.getBoolean(Constants.LEARNING_STARTED, false)
-
-        if (startedLearning) {
-            home_prog_btn_continue.text == Constants.HOME_CONTINUE_LEARNING
-        }
-
+//TODO USE THIS BOOLEAN LATER
 
 // continue learning
-        /*home_prog_btn_continue.setOnClickListener {
+        home_prog_btn_continue.setOnClickListener {
 
-            if (home_prog_btn_continue.text == Constants.HOME_START_LEARNING)
-                home_prog_btn_continue.text = Constants.HOME_CONTINUE_LEARNING
+            // first time start learning
+            if (!startedLearning) {
+                home_prog_btn_continue.text == Constants.HOME_CONTINUE_LEARNING
 
-            App.learnLessonPrefEditor = App.learnLessonPref.edit()
+                with(App.learnLessonPref.edit()) {
 
-            App.learnLessonPrefEditor.putBoolean(Constants.LEARNING_STARTED, false)
-            App.learnLessonPrefEditor.apply()
+                    putInt(Constants.PREF_LEARNING_LESSON_Number, 1)
+                    putBoolean(Constants.LEARNING_STARTED, true)
+                    commit()
+                }
+            }
+
+            val lessonNumber = App.learnLessonPref.getInt(Constants.PREF_LEARNING_LESSON_Number, 1)
+// TODO CHANGE THIS VALUE IN SHAREDPREF LATER WHEN LESSON CHANGED
 
             val intent = Intent(this, LessonActivity::class.java)
 
-            val lessonNumber = App.learnLessonPref.getInt(Constants.LEARNING_LESSON, 1)
-
-
-            intent.putExtra(Constants.INTENT_VALUE_LessonNumber, lessonNumber)
+//TODO CHANGE LEARNING LESSON LATER
+            intent.putExtra(Constants.INTENT_VALUE_LESSON_NUMBER, lessonNumber)
             startActivityForResult(intent, Constants.REQ_CODET_TO_LearningLesson)
-        }*/
-
-
+        }
     }
 
     private fun getAllLessons() {
@@ -71,14 +70,14 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.IOnLessonClickListener {
             }, {
 
             }).let {
-                App.compositeDisposable.add(it)
+//                App.compositeDisposable.add(it)
             }
     }
 
     override fun onItemClick(lessonNum: Int) {
 
         val intent = Intent(this, LessonActivity::class.java)
-        intent.putExtra(Constants.INTENT_VALUE_LessonNumber, lessonNum)
+        intent.putExtra(Constants.INTENT_VALUE_LESSON_NUMBER, lessonNum)
         startActivity(intent)
     }
 }

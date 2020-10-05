@@ -21,14 +21,15 @@ open class App : Application() {
         lateinit var lessons: List<Story>
         lateinit var lessonWords: List<Vocabulary>
         lateinit var favWords: List<Vocabulary>
-        lateinit var learnedWords: List<Vocabulary>
+        lateinit var notLessonLearnedWords: List<Vocabulary>
+//        lateinit var learnedWords: List<Vocabulary>
 
         var databaseInstance: MyDatabase? = null
 
         var wordLearned = 0
 
         lateinit var learnLessonPref: SharedPreferences
-        lateinit var learnLessonPrefEditor: SharedPreferences.Editor
+//        lateinit var learnLessonPrefEditor: SharedPreferences.Editor
     }
 
     //--------------------------
@@ -44,7 +45,7 @@ open class App : Application() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ }, { }).let {
-                compositeDisposable.add(it)
+//                compositeDisposable.add(it)
             }
 
         vocabularyDao.getAllVocabs()
@@ -54,7 +55,8 @@ open class App : Application() {
                 compositeDisposable.add(it)
             }
 
-        learnLessonPref = getSharedPreferences(Constants.PREF_LEARNING_LESSON, Context.MODE_PRIVATE)
+        learnLessonPref = getSharedPreferences(Constants.PREF_LEARNING,Context.MODE_PRIVATE) ?: return
+//        learnLessonPref = getSharedPreferences(Constants.PREF_LEARNING_LESSON, Context.MODE_PRIVATE)
 //        learnLessonPrefEditor = learnLessonPref.edit()
 //        learnLessonPrefEditor.putInt(Constants.NUM_WORDS_LEARNED, 0)
 //        learnLessonPrefEditor.apply()
