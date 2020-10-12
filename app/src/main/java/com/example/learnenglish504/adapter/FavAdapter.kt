@@ -90,7 +90,7 @@ class FavAdapter(
 
     fun updateFav(wordID: Int) {
 
-        vocabularyDao.getWordDetailsByID(wordID)
+        vocabularyDao.getVocabById(wordID)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ wordDao ->

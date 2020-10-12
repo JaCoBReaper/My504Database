@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "vocabulary")
-data class  Vocabulary constructor(
+data class Vocabulary constructor(
 
     @PrimaryKey
     val id: Int?,
@@ -26,7 +26,7 @@ data class  Vocabulary constructor(
     val pexa: String?,
     val pexb: String?,
     val pexc: String?
-){
+) {
     @Transient
     var status: Int? = 0
 }

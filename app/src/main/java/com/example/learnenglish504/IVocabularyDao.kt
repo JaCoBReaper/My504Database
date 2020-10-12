@@ -19,10 +19,10 @@ interface IVocabularyDao {
     fun getIdByWord(word: String): Single<Int>
 
     @Query("SELECT * FROM vocabulary WHERE id = :inputID")
-    fun getWordDetailsByID(inputID: Int): Single<Vocabulary>
+    fun getVocabById(inputID: Int): Single<Vocabulary>
 
     @Query("SELECT * FROM vocabulary WHERE word = :word")
-    fun getWordDetailsByWord(word: String): Single<Vocabulary>
+    fun getVocabByWord(word: String): Single<Vocabulary>
 
     @Query("UPDATE vocabulary SET favorited = :state WHERE word = :word")
     fun setFavourite(state: Int, word: String): Completable
@@ -37,6 +37,12 @@ interface IVocabularyDao {
     fun setLearned(state: Int, word: String): Completable
 
     @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 0")
-    fun findRemainingWordsByLesson(lesson: Int): Single<List<Vocabulary>>
+    fun findRemainingWords(lesson: Int): Single<List<Vocabulary>>
+
+    @Query("Select * FROM vocabulary Where lesson = :lesson AND is_read = 1")
+    fun findLearnedWordsProgress(lesson: Int): Single<List<Vocabulary>>
+
+    @Query("Select * FROM vocabulary Where is_read = 1")
+    fun findAllLearned(): Single<List<Vocabulary>>
 
 }

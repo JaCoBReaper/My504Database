@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         txv_gotoNextActivity.setOnClickListener {
-
             startActivity(Intent(this, HomeActivity::class.java))
         }
     }

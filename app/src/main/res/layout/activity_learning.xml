@@ -16,7 +16,7 @@
         app:layout_constraintGuide_percent=".15" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline15"
+        android:id="@+id/gl_h_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -91,7 +91,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cardCornerRadius="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
+        app:layout_constraintBottom_toTopOf="@+id/gl_h_4"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_3"
         app:layout_constraintStart_toStartOf="@+id/gl_v_1"
         app:layout_constraintTop_toTopOf="@+id/gl_h_1">
@@ -108,14 +108,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/gl_h_2"
+        app:layout_constraintBottom_toTopOf="@+id/lesson_btn_go_next"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_3"
         app:layout_constraintStart_toStartOf="@+id/gl_v_1"
-        app:layout_constraintTop_toTopOf="@+id/guideline15">
+        app:layout_constraintTop_toTopOf="@+id/gl_h_4">
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/learn_word_viewPager"
@@ -124,23 +124,23 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/learn_detail_imgb_prev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:background="@color/myColor_white"
+        android:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardViewBottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardViewBottom"
         app:srcCompat="@drawable/ic_previous" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/learn_detail_imgb_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:background="@color/myColor_white"
+        android:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardViewBottom"
@@ -151,6 +151,7 @@
         style="@style/Button.FloatingAction"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/shape_continue_learning"
         android:layoutDirection="rtl"
         android:paddingStart="40dp"
@@ -162,7 +163,6 @@
         app:iconTint="@color/myColor_white"
         app:layout_constraintBottom_toTopOf="@+id/gl_h_2"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_3"
-        app:layout_constraintStart_toStartOf="@+id/gl_v_1"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewBottom" />
+        app:layout_constraintStart_toStartOf="@+id/gl_v_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

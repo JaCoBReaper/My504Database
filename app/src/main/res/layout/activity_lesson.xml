@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:srcCompat="@drawable/ic_book_finished" />
+        app:srcCompat="@drawable/ic_book_studing" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

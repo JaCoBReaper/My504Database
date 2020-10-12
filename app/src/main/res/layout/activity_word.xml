@@ -16,7 +16,7 @@
         app:layout_constraintGuide_percent=".15" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline15"
+        android:id="@+id/gl_h_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cardCornerRadius="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
+        app:layout_constraintBottom_toTopOf="@+id/gl_h_4"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_3"
         app:layout_constraintStart_toStartOf="@+id/gl_v_1"
         app:layout_constraintTop_toTopOf="@+id/gl_h_1">
@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toTopOf="@+id/gl_h_2"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_3"
         app:layout_constraintStart_toStartOf="@+id/gl_v_1"
-        app:layout_constraintTop_toTopOf="@+id/guideline15">
+        app:layout_constraintTop_toTopOf="@+id/gl_h_4">
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/word_viewPager"
@@ -112,7 +112,7 @@
         android:background="@color/myColor_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline15"
+        app:layout_constraintTop_toTopOf="@+id/gl_h_4"
         app:srcCompat="@drawable/ic_previous" />
 
     <ImageButton
@@ -123,23 +123,7 @@
         android:background="@color/myColor_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline15"
+        app:layout_constraintTop_toTopOf="@+id/gl_h_4"
         app:srcCompat="@drawable/ic_next" />
-
-    <TextView
-        android:id="@+id/word_txv_learned"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_home_lesson_row_bg"
-        android:gravity="center"
-        android:text="یاد گرفتم"
-        android:textColor="@color/myColor_red_light"
-        android:textSize="@dimen/font_normal3"
-        app:layout_constraintBottom_toBottomOf="@+id/word_fab_return"
-        app:layout_constraintEnd_toStartOf="@+id/word_fab_favourite"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toEndOf="@+id/word_fab_return"
-        app:layout_constraintTop_toTopOf="@+id/word_fab_favourite"
-        tools:srcCompat="@drawable/shape_home_lesson_row_bg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

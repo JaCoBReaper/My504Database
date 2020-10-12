@@ -4,24 +4,35 @@ import CustomPagerAdapter
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.learnenglish504.App
 import com.example.learnenglish504.App.Companion.compositeDisposable
-import com.example.learnenglish504.App.Companion.vocabularyDao
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Vocabulary
-import com.example.learnenglish504.activities.Constants.Companion.INTENT_VALUE_WORDID
+import com.example.learnenglish504.activities.Constants.Companion.INTENT_WORD_ID
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_word.*
 import kotlinx.android.synthetic.main.word_details_top.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class WordActivity : AppCompatActivity() {
+class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var isFavChanged = false
     private var wordID = 0
+    lateinit var wordDao: Vocabulary
+    private var tts: TextToSpeech? = null
+    private var buttonSpeak_us: ImageView? = null
+    private var buttonSpeak_uk: ImageView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -30,65 +41,36 @@ class WordActivity : AppCompatActivity() {
 
 
 // coming from LessonAdapter
-        wordID = intent.getIntExtra(INTENT_VALUE_WORDID, 0)
-        lateinit var wordDao: Vocabulary
+        wordID = intent.getIntExtra(INTENT_WORD_ID, 0)
 
-// getting and setting word
-        vocabularyDao.getWordDetailsByID(wordID)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                wordDao = it
-                setWord(wordDao)
+        setWord()
 
-                // for showing view pager item, the middle one first
-                word_viewPager.currentItem = 1
+        onButtonsClick()
 
-            }, {}).let { compositeDisposable.add(it) }
+        setPager()
 
-        word_fab_return.setOnClickListener {
-            checkDataChanged()
-        }
+        buttonSpeak_us = this.word_btn_pronounce_us
+//        buttonSpeak_uk = this.word_btn_pronounce_uk
 
-// fav button behaviour
-        word_fab_favourite.setOnClickListener {
+        buttonSpeak_us!!.isEnabled = false;
+//        buttonSpeak_uk!!.isEnabled = false;
 
-            isFavChanged = true
+        tts = TextToSpeech(this, this)
 
-            vocabularyDao.checkFavourite(wordDao.word!!)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
+        word_btn_pronounce_us!!.setOnClickListener { speakOut() }
+//        word_btn_pronounce_uk!!.setOnClickListener { speakOut() }
 
-                    if (result == 0) {
+    }
 
-                        vocabularyDao.setFavourite(1, wordDao.word!!)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
+    private fun speakOut() {
 
-                                word_fab_favourite.setImageResource(R.drawable.ic_is_favorite)
+        val text = word_txv_actual_word.text.toString()
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
 
-                            }, {}).let { compositeDisposable.add(it) }
+        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
+    }
 
-                    } else {
-
-                        vocabularyDao.setFavourite(0, wordDao.word!!)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-
-                                word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
-
-                            }, {}).let { compositeDisposable.add(it) }
-
-                    }
-                }, {
-
-                }).let { compositeDisposable.add(it) }
-        }
-
-// pager
+    private fun setPager() {
         onNextPrevClicks()
 
         word_viewPager?.addOnPageChangeListener(
@@ -116,6 +98,65 @@ class WordActivity : AppCompatActivity() {
                 override fun onPageSelected(position: Int) {}
             })
     }
+
+    private fun onButtonsClick() {
+        word_fab_return.setOnClickListener {
+            checkDataChanged()
+        }
+
+        // fav button behaviour
+        word_fab_favourite.setOnClickListener {
+
+            isFavChanged = true
+
+            App.databaseInstance!!.vocabularyDao().checkFavourite(wordDao.word!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+
+                    if (result == 0) {
+
+                        App.databaseInstance!!.vocabularyDao().setFavourite(1, wordDao.word!!)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+
+                                word_fab_favourite.setImageResource(R.drawable.ic_is_favorite)
+
+                            }, {}).let { compositeDisposable.add(it) }
+
+                    } else {
+
+                        App.databaseInstance!!.vocabularyDao().setFavourite(0, wordDao.word!!)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+
+                                word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
+
+                            }, {}).let { compositeDisposable.add(it) }
+
+                    }
+                }, {
+
+                }).let { compositeDisposable.add(it) }
+        }
+    }
+
+    private fun setWord() {
+        App.databaseInstance!!.vocabularyDao().getVocabById(wordID)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                wordDao = it
+                setWord(wordDao)
+
+                // for showing view pager item, the middle one first
+                word_viewPager.currentItem = 1
+
+            }, {}).let { compositeDisposable.add(it) }
+    }
+
     private fun onNextPrevClicks() {
 
         word_detail_imgb_next.setOnClickListener { word_viewPager.setCurrentItem(getItem(1), true) }
@@ -140,12 +181,6 @@ class WordActivity : AppCompatActivity() {
         else
             word_fab_favourite.setImageResource(R.drawable.ic_not_favorite)
 
-        if (wordDao.is_read == 1)
-            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_green_light))
-        else
-            word_txv_learned.setTextColor(resources.getColor(R.color.myColor_red))
-
-
         val examplesPer = ArrayList<String>()
 
         examplesPer.add(wordDao.pexa.toString())
@@ -160,11 +195,6 @@ class WordActivity : AppCompatActivity() {
 
     private fun getItem(i: Int): Int = word_viewPager.currentItem + i
 
-    override fun onBackPressed() {
-
-        checkDataChanged()
-    }
-
     private fun checkDataChanged() {
         if (isFavChanged) {
 
@@ -173,5 +203,46 @@ class WordActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, output)
         }
         finish()
+    }
+
+    override fun onBackPressed() {
+
+        checkDataChanged()
+    }
+
+    override fun onInit(status: Int) {
+
+        if (status == TextToSpeech.SUCCESS) {
+            // set US English as language for tts
+            val resultUS = tts!!.setLanguage(Locale.US)
+            val resultUK = tts!!.setLanguage(Locale.UK)
+
+            // US
+            if (resultUS == TextToSpeech.LANG_MISSING_DATA || resultUS == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported!")
+            } else {
+                buttonSpeak_us!!.isEnabled = true
+            }
+            // UK
+            /*if (resultUK == TextToSpeech.LANG_MISSING_DATA || resultUK == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported!")
+            } else {
+                buttonSpeak_uk!!.isEnabled = true
+            }*/
+
+        } else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+
+    }
+
+
+    override fun onDestroy() {
+        // Shutdown TTS
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
     }
 }

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnenglish504.R
@@ -36,8 +35,8 @@ class LessonAdapter(
         val txtPer: TextView = itemView.findViewById(R.id.lesson_per_translate)
         val imgFav: ImageView = itemView.findViewById(R.id.lesson_img_favourite)
 
-//        val txtLearned: TextView = itemView.findViewById(R.id.prog_lesson_txv_learned)
-//        val progressBar: ProgressBar = itemView.findViewById(R.id.prog_lesson_progbar)
+        val imgBook: ImageView = itemView.findViewById(R.id.lesson_img_book)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -58,6 +57,11 @@ class LessonAdapter(
 
         holder.txtEng.text = data[position].word.toString()
         holder.txtPer.text = data[position].persian.toString()
+
+        if (data[position].is_read == 1){
+
+            holder.imgBook.setImageResource(R.drawable.ic_book_finished)
+        }
 
         val actualWord = data[position].word!!
 
@@ -91,7 +95,7 @@ class LessonAdapter(
 
     fun updateFav(wordID: Int) {
 
-        vocabularyDao.getWordDetailsByID(wordID)
+        vocabularyDao.getVocabById(wordID)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ wordDao ->

@@ -1,5 +1,6 @@
 package com.example.learnenglish504.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnenglish504.R
 import com.example.learnenglish504.Story
+import com.example.learnenglish504.activities.Constants
 
 class HomeAdapter(
     private val data: List<Story>,
@@ -35,11 +37,12 @@ class HomeAdapter(
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
         binding(holder, position)
     }
 
     private fun binding(holder: MyViewHolder, position: Int) {
+
+        Log.i(Constants.LogTag, "hi")
 
         holder.imgLesson.setImageResource(R.drawable.ic_book_notopened)
         holder.txtLessonNumber.text = data[position].id.toString()
@@ -50,8 +53,9 @@ class HomeAdapter(
             mClickListener.onItemClick((data[position].id!!))
         }
     }
-
-    interface IOnLessonClickListener {
-        fun onItemClick(position: Int)
-    }
 }
+
+interface IOnLessonClickListener {
+    fun onItemClick(lessonNumber: Int)
+}
+

@@ -24,10 +24,10 @@ internal class CustomPagerAdapter(
     override fun instantiateItem(container: ViewGroup, position: Int): View {
 
         val itemView: View =
-            LayoutInflater.from(context).inflate(R.layout.word_details_bottom, container, false)
+            LayoutInflater.from(context).inflate(R.layout.rep_word_details_bottom, container, false)
 
-        val txtWordPer: TextView = itemView.findViewById(R.id.viewPager_txv_per)
-        val txtWordEng: TextView = itemView.findViewById(R.id.viewPager_txv_eng)
+        val txtWordPer: TextView = itemView.findViewById(R.id.rep_viewPager_txv_per)
+        val txtWordEng: TextView = itemView.findViewById(R.id.rep_viewPager_txv_eng)
 
         txtWordPer.text = engList[position]
         txtWordEng.text = perList[position]

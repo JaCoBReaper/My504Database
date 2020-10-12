@@ -12,15 +12,16 @@ import com.example.learnenglish504.R
 import com.example.learnenglish504.Vocabulary
 
 
-class MyLearnTestAdapter(
-    val context: Context,
-    val list: List<Vocabulary>,
+class LearnTestAdapter(
+    private val context: Context,
+    private val onAnswerClick: IOnAnswerClick,
+    private val list: List<Vocabulary>,
     private val inputWord: Vocabulary
 ) :
-    RecyclerView.Adapter<MyLearnTestAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<LearnTestAdapter.MyViewHolder>() {
 
     var clickedOnce = false
-    var righAnswerID = 0
+
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -41,28 +42,26 @@ class MyLearnTestAdapter(
     override fun getItemCount(): Int = list.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val vocabulary = list[position]
 
-//        if (vocabulary.word == inputWord.word)
-//            righAnswerID = position
-
-        holder.txtRandomWord.text = vocabulary.persian
+        holder.txtRandomWord.text = list[position].persian
 
         setHolderColorAnim(holder, position)
 
-        holder.txtRandomWord.setOnClickListener {
+        holder.cardView.setOnClickListener {
             if (!clickedOnce) {
                 clickedOnce = true
+
+                if (list[position].word == inputWord.word)
+                    onAnswerClick.onCorrectAnswerClick(inputWord)
+                else
+                    onAnswerClick.onWrongAnswerClick(inputWord)
 
                 changeStatus(holder, position)
             }
         }
     }
 
-    fun changeStatus(
-        holder: MyViewHolder,
-        position: Int
-    ) {
+    private fun changeStatus(holder: MyViewHolder, position: Int) {
         if (inputWord.persian == holder.txtRandomWord.text) {
             list[position].status = 1
 
@@ -78,12 +77,7 @@ class MyLearnTestAdapter(
         notifyDataSetChanged()
     }
 
-    private fun onAnswerClick(holder: MyViewHolder, position: Int) {
-
-
-    }
-
-    fun setHolderColorAnim(holder: MyViewHolder, position: Int) {
+    private fun setHolderColorAnim(holder: MyViewHolder, position: Int) {
         if (list[position].status == 1) {
             holder.txtRandomWord.setTextColor(context.resources.getColor(R.color.myColor_white))
             holder.cardView.setCardBackgroundColor(context.resources.getColor(R.color.myColor_green_light))
@@ -100,4 +94,10 @@ class MyLearnTestAdapter(
 
         holder.cardView.startAnimation(animZoomIn)
     }
+}
+
+interface IOnAnswerClick {
+    fun onCorrectAnswerClick(word: Vocabulary)
+
+    fun onWrongAnswerClick(word: Vocabulary)
 }
